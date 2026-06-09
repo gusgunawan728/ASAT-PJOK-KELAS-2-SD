@@ -2,49 +2,419 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ASAT PJOK Kelas 2 SD</title>
 
-<link rel="stylesheet" href="style.css">
+<style>
+body{
+margin:0;
+font-family:'Comic Sans MS',sans-serif;
+background:linear-gradient(135deg,#87CEFA,#98FB98,#FFFACD);
+}
+
+.container{
+max-width:900px;
+margin:auto;
+padding:20px;
+}
+
+.header{
+background:white;
+border-radius:25px;
+padding:20px;
+display:flex;
+align-items:center;
+justify-content:center;
+gap:20px;
+box-shadow:0 5px 15px rgba(0,0,0,.2);
+}
+
+.teacher{
+font-size:80px;
+}
+
+.title h1{
+margin:0;
+font-size:50px;
+color:#2196F3;
+text-shadow:2px 2px white;
+}
+
+.title h2{
+margin:0;
+color:#FF9800;
+}
+
+.progress{
+height:20px;
+background:#ddd;
+border-radius:20px;
+margin:20px 0;
+overflow:hidden;
+}
+
+.bar{
+height:100%;
+width:0%;
+background:#4CAF50;
+transition:.3s;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:20px;
+box-shadow:0 5px 15px rgba(0,0,0,.2);
+text-align:center;
+}
+
+.question-image{
+font-size:120px;
+}
+
+.question{
+font-size:24px;
+font-weight:bold;
+margin:20px 0;
+}
+
+.option{
+display:block;
+width:100%;
+padding:15px;
+margin:10px 0;
+font-size:18px;
+border:none;
+border-radius:15px;
+cursor:pointer;
+background:#E3F2FD;
+}
+
+.option:hover{
+background:#BBDEFB;
+}
+
+.result{
+display:none;
+background:white;
+padding:30px;
+border-radius:20px;
+text-align:center;
+margin-top:20px;
+}
+
+.score{
+font-size:60px;
+font-weight:bold;
+color:#4CAF50;
+}
+</style>
 </head>
 
 <body>
 
 <div class="container">
 
-<header>
+<div class="header">
+<div class="teacher">🏃‍♂️👨‍🏫</div>
 
-<img src="img/guru.png" class="guru">
-
-<div>
-<h1>🏃 ASAT PJOK</h1>
+<div class="title">
+<h1>ASAT PJOK</h1>
 <h2>KELAS 2 SD</h2>
 <p>25 Soal Pilihan Ganda</p>
 </div>
 
-</header>
+<div class="teacher">⚽🏸</div>
+</div>
 
 <div class="progress">
-<div id="bar"></div>
+<div class="bar" id="bar"></div>
 </div>
 
-<div id="nomor"></div>
+<h3 id="number"></h3>
 
-<div class="card">
+<div class="card" id="quiz">
 
-<img id="gambarSoal">
+<div class="question-image" id="emoji"></div>
 
-<h3 id="soal"></h3>
+<div class="question" id="question"></div>
 
-<div id="pilihan"></div>
-
-</div>
-
-<div id="hasil" class="hasil"></div>
+<div id="options"></div>
 
 </div>
 
-<script src="script.js"></script>
+<div class="result" id="result">
+<h2>🎉 Selamat!</h2>
+<div class="score" id="score"></div>
+<p id="message"></p>
+
+<button class="option" onclick="location.reload()">
+🔄 Main Lagi
+</button>
+</div>
+
+</div>
+
+<script>
+
+const questions=[
+
+{
+emoji:"🚶",
+question:"Contoh gerak berjalan adalah ....",
+options:["Berjalan ke kelas","Mengayunkan tangan","Memutar badan"],
+answer:0
+},
+
+{
+emoji:"🏃",
+question:"Saat lomba, Beni bergerak dengan cara ....",
+options:["Melompat","Berlari","Membungkuk"],
+answer:1
+},
+
+{
+emoji:"🤾",
+question:"Contoh gerak melompat adalah ....",
+options:["Melompati tali","Menangkap bola","Menendang bola"],
+answer:0
+},
+
+{
+emoji:"🦘",
+question:"Gerak meloncat dilakukan dengan ....",
+options:["Dua kaki","Satu kaki sebagai tumpuan","Duduk"],
+answer:1
+},
+
+{
+emoji:"🙇",
+question:"Membungkukkan badan termasuk gerak ....",
+options:["Lokomotor","Manipulatif","Nonlokomotor"],
+answer:2
+},
+
+{
+emoji:"🔄",
+question:"Memutar badan termasuk gerak ....",
+options:["Nonlokomotor","Lokomotor","Berlari"],
+answer:0
+},
+
+{
+emoji:"⚾",
+question:"Melempar bola termasuk gerak ....",
+options:["Manipulatif","Lokomotor","Nonlokomotor"],
+answer:0
+},
+
+{
+emoji:"🤲",
+question:"Agar bola tidak jatuh kita harus ....",
+options:["Menendang","Menangkap","Menggiring"],
+answer:1
+},
+
+{
+emoji:"⚽",
+question:"Pemain mencetak gol dengan cara ....",
+options:["Menangkap","Menendang","Memukul"],
+answer:1
+},
+
+{
+emoji:"⚽",
+question:"Menggiring bola dilakukan dengan cara ....",
+options:["Memukul","Menangkap","Menendang perlahan"],
+answer:2
+},
+
+{
+emoji:"🥅",
+question:"Alat utama permainan sepak bola adalah ....",
+options:["Bola sepak","Raket","Kok"],
+answer:0
+},
+
+{
+emoji:"🏆",
+question:"Tujuan permainan sepak bola adalah ....",
+options:["Memasukkan bola ke gawang","Menjatuhkan lawan","Memukul bola"],
+answer:0
+},
+
+{
+emoji:"🏏",
+question:"Alat utama permainan kasti adalah ....",
+options:["Raket","Tongkat dan bola","Net"],
+answer:1
+},
+
+{
+emoji:"🏃‍♂️",
+question:"Dalam permainan kasti pemain harus ....",
+options:["Memukul lalu berlari","Menendang","Menggiring"],
+answer:0
+},
+
+{
+emoji:"🤸",
+question:"Pemanasan dilakukan agar ....",
+options:["Cepat lelah","Terhindar cedera","Mengantuk"],
+answer:1
+},
+
+{
+emoji:"🧘",
+question:"Pendinginan dilakukan agar ....",
+options:["Tubuh rileks kembali","Tubuh panas","Haus"],
+answer:0
+},
+
+{
+emoji:"💪",
+question:"Manfaat olahraga adalah ....",
+options:["Tubuh sehat dan kuat","Tubuh lemah","Malas bergerak"],
+answer:0
+},
+
+{
+emoji:"☀️",
+question:"Waktu yang baik untuk olahraga adalah ....",
+options:["Saat tidur","Pagi hari","Tengah malam"],
+answer:1
+},
+
+{
+emoji:"🥗",
+question:"Contoh makanan sehat adalah ....",
+options:["Sayur dan buah","Permen","Keripik"],
+answer:0
+},
+
+{
+emoji:"💧",
+question:"Minuman sehat untuk tubuh adalah ....",
+options:["Air putih","Soda","Sirup"],
+answer:0
+},
+
+{
+emoji:"🪥",
+question:"Menjaga kebersihan gigi dilakukan dengan ....",
+options:["Menyikat gigi","Makan permen","Tidak menyikat gigi"],
+answer:0
+},
+
+{
+emoji:"🧼",
+question:"Sebelum makan kita harus ....",
+options:["Bermain","Mencuci tangan","Berlari"],
+answer:1
+},
+
+{
+emoji:"⛑️",
+question:"Saat bersepeda kita harus memakai ....",
+options:["Helm","Topi","Tas"],
+answer:0
+},
+
+{
+emoji:"🛝",
+question:"Saat bermain kita harus ....",
+options:["Mendorong teman","Bermain di tempat aman","Berebut alat"],
+answer:1
+},
+
+{
+emoji:"🤝",
+question:"Sikap sportif saat kalah adalah ....",
+options:["Marah","Mengejek lawan","Menerima kekalahan"],
+answer:2
+}
+
+];
+
+let current=0;
+let score=0;
+
+function loadQuestion(){
+
+let q=questions[current];
+
+document.getElementById("number").innerHTML=
+"Soal "+(current+1)+" dari "+questions.length;
+
+document.getElementById("emoji").innerHTML=q.emoji;
+
+document.getElementById("question").innerHTML=q.question;
+
+document.getElementById("bar").style.width=
+(current/questions.length*100)+"%";
+
+let html="";
+
+q.options.forEach((opt,index)=>{
+
+html+=`
+<button class="option"
+onclick="checkAnswer(${index})">
+${String.fromCharCode(65+index)}. ${opt}
+</button>`;
+});
+
+document.getElementById("options").innerHTML=html;
+}
+
+function checkAnswer(choice){
+
+if(choice===questions[current].answer){
+score++;
+}
+
+current++;
+
+if(current<questions.length){
+loadQuestion();
+}
+else{
+showResult();
+}
+}
+
+function showResult(){
+
+document.getElementById("quiz").style.display="none";
+
+document.getElementById("result").style.display="block";
+
+let nilai=Math.round(
+(score/questions.length)*100
+);
+
+document.getElementById("score").innerHTML=nilai;
+
+let msg="";
+
+if(nilai>=80){
+msg="🏆 Hebat! Kamu sangat sportif!";
+}
+else if(nilai>=60){
+msg="👍 Bagus! Terus berlatih ya.";
+}
+else{
+msg="🌟 Tetap semangat belajar dan berolahraga!";
+}
+
+document.getElementById("message").innerHTML=msg;
+
+document.getElementById("bar").style.width="100%";
+}
+
+loadQuestion();
+
+</script>
 
 </body>
 </html>
